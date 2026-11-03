@@ -1,6 +1,21 @@
 # Tmux Resurrect
 
-[![Build Status](https://travis-ci.org/tmux-plugins/tmux-resurrect.svg?branch=master)](https://travis-ci.org/tmux-plugins/tmux-resurrect)
+> **Maintained fork of [tmux-plugins/tmux-resurrect](https://github.com/tmux-plugins/tmux-resurrect).**
+> Upstream has had no merged changes since March 2023, while long-standing bugs
+> remain open. This fork applies fixes on top of upstream `master` and stays
+> drop-in compatible with existing save files and options.
+
+## Changes from upstream
+
+| Change | Upstream reference |
+|---|---|
+| **Fix panes restored to `$HOME` when their title is empty.** An empty `pane_title` made bash `read` collapse consecutive tab delimiters, shifting every following field: the saved directory became `0`/`1` and the command column got corrupted. Empty titles now fall back to the short hostname (tmux's default title). Typically triggered by programs that clear the terminal title on exit. | [#520](https://github.com/tmux-plugins/tmux-resurrect/pull/520), [#564](https://github.com/tmux-plugins/tmux-resurrect/pull/564), [#581](https://github.com/tmux-plugins/tmux-resurrect/pull/581), [#583](https://github.com/tmux-plugins/tmux-resurrect/pull/583) |
+
+Install this fork instead of upstream with TPM:
+
+    set -g @plugin 'nmetahri/tmux-resurrect'
+
+---
 
 Restore `tmux` environment after system restart.
 
@@ -65,7 +80,7 @@ overwritten.
 
 Add plugin to the list of TPM plugins in `.tmux.conf`:
 
-    set -g @plugin 'tmux-plugins/tmux-resurrect'
+    set -g @plugin 'nmetahri/tmux-resurrect'
 
 Hit `prefix + I` to fetch the plugin and source it. You should now be able to
 use the plugin.
@@ -74,7 +89,7 @@ use the plugin.
 
 Clone the repo:
 
-    $ git clone https://github.com/tmux-plugins/tmux-resurrect ~/clone/path
+    $ git clone https://github.com/nmetahri/tmux-resurrect ~/clone/path
 
 Add this line to the bottom of `.tmux.conf`:
 
