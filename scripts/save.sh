@@ -86,11 +86,11 @@ state_format() {
 }
 
 dump_panes_raw() {
-	tmux list-panes -a -F "$(pane_format)" | sort -k1 | cut -f2-
+	tmux list-panes -a -F "$(pane_format)" | sort -t"$d" -s -k1.2,1n | cut -f2-
 }
 
 dump_windows_raw(){
-	tmux list-windows -a -F "$(window_format)" | sort -k1 | cut -f2-
+	tmux list-windows -a -F "$(window_format)" | sort -t"$d" -s -k1.2,1n | cut -f2-
 }
 
 toggle_window_zoom() {
