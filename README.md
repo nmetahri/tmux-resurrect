@@ -7,9 +7,23 @@
 
 ## Changes from upstream
 
-| Change | Upstream reference |
-|---|---|
-| **Fix panes restored to `$HOME` when their title is empty.** An empty `pane_title` made bash `read` collapse consecutive tab delimiters, shifting every following field: the saved directory became `0`/`1` and the command column got corrupted. Empty titles now fall back to the short hostname (tmux's default title). Typically triggered by programs that clear the terminal title on exit. | [#520](https://github.com/tmux-plugins/tmux-resurrect/pull/520), [#564](https://github.com/tmux-plugins/tmux-resurrect/pull/564), [#581](https://github.com/tmux-plugins/tmux-resurrect/pull/581), [#583](https://github.com/tmux-plugins/tmux-resurrect/pull/583) |
+| Change | Upstream issue / PR | Thanks to |
+|---|---|---|
+| Panes restored to `$HOME` when their title is empty: an empty `pane_title` made bash `read` collapse consecutive tab delimiters and shift every following field. Empty titles now fall back to the short hostname. | [#520](https://github.com/tmux-plugins/tmux-resurrect/pull/520), [#564](https://github.com/tmux-plugins/tmux-resurrect/pull/564), [#581](https://github.com/tmux-plugins/tmux-resurrect/pull/581), [#583](https://github.com/tmux-plugins/tmux-resurrect/pull/583) | [@scmanjarrez](https://github.com/scmanjarrez), [@KTSCode](https://github.com/KTSCode), [@chirayuk](https://github.com/chirayuk), [@josh-stephens](https://github.com/josh-stephens) |
+| A save firing mid-boot or mid-shutdown could capture zero panes and repoint `last` to it; restoring that empty file killed the session. Paneless snapshots are now neither saved nor restored. | [#578](https://github.com/tmux-plugins/tmux-resurrect/pull/578), [#576](https://github.com/tmux-plugins/tmux-resurrect/pull/576) | [@googlebleh](https://github.com/googlebleh) |
+| Two saves within the same second deleted the only snapshot and left `last` dangling. | [#598](https://github.com/tmux-plugins/tmux-resurrect/issues/598), [#599](https://github.com/tmux-plugins/tmux-resurrect/pull/599) | [@ericz7900](https://github.com/ericz7900) |
+| Restore re-read `last` at every phase, so a concurrent save could mix two snapshots. The snapshot is now pinned once at restore start. | [#584](https://github.com/tmux-plugins/tmux-resurrect/pull/584) | [@kvoli](https://github.com/kvoli) |
+| Concurrent restores (e.g. tmux-continuum firing twice at login) added extra panes squashed to one line. Only one restore now runs at a time per server (`flock`). | [#437](https://github.com/tmux-plugins/tmux-resurrect/issues/437), [#600](https://github.com/tmux-plugins/tmux-resurrect/pull/600) | [@andrewboldi](https://github.com/andrewboldi) |
+| Sessions with a dot in their name (`v3.69-x`) lost a window on restore. | [#596](https://github.com/tmux-plugins/tmux-resurrect/issues/596), [#597](https://github.com/tmux-plugins/tmux-resurrect/pull/597) | [@aharoJ](https://github.com/aharoJ) |
+| Windows whose name starts with a digit could shadow a missing window index, so the window was skipped on restore. | [#575](https://github.com/tmux-plugins/tmux-resurrect/pull/575) | [@theolundqvist](https://github.com/theolundqvist) |
+| Restored process commands containing `,`, `&` or `\` were corrupted by a `sed` substitution. | [#588](https://github.com/tmux-plugins/tmux-resurrect/issues/588), [#587](https://github.com/tmux-plugins/tmux-resurrect/pull/587) | [@smoser](https://github.com/smoser) |
+| The resurrect directory was world-readable with the default umask; it is now restricted to its owner. | [#561](https://github.com/tmux-plugins/tmux-resurrect/issues/561), [#562](https://github.com/tmux-plugins/tmux-resurrect/pull/562) | [@burka](https://github.com/burka) |
+| Sessions were saved and restored in alphabetical order instead of the user's creation order. Session ids are sorted numerically in this fork, so order stays correct beyond 10 sessions. | [#388](https://github.com/tmux-plugins/tmux-resurrect/issues/388), [#476](https://github.com/tmux-plugins/tmux-resurrect/pull/476) | [@Dosx001](https://github.com/Dosx001) |
+| Saving ran `ps` once per pane. The process table is now read once per save (about 4x faster on ~40 panes). | [#566](https://github.com/tmux-plugins/tmux-resurrect/pull/566) | [@thewatts](https://github.com/thewatts) |
+
+Huge thanks to everyone above who took the time to diagnose these bugs and open
+pull requests upstream: this fork mostly collects their work. Each fix is a
+separate commit authored by its original contributor.
 
 Install this fork instead of upstream with TPM:
 
